@@ -23,12 +23,26 @@ HTML_TMPL = """
 
 <script type="text/javascript" nonce="">
 //<![CDATA[
-var ClientAudioPlayer = {
-    Play: function(audioUrl) {
-        var audio = new Audio(audioUrl);
-        audio.play();
-    }
-};
+var ClientAudioPlayer = (function() {
+    var audioInstance = null;
+
+    return {
+        Play: function(audioUrl) {
+            // 如果已经存在音频实例，则暂停并重置
+            if (audioInstance) {
+                audioInstance.pause();
+                audioInstance.currentTime = 0;
+            } else {
+                // 否则，创建新的音频实例
+                audioInstance = new Audio();
+            }
+
+            // 设置新的音频文件URL并播放
+            audioInstance.src = audioUrl;
+            audioInstance.play();
+        }
+    };
+})();
 
 var ClientPartCall = {
   // 定义IAddInstrumentation方法
